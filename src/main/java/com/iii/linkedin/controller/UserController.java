@@ -1,11 +1,17 @@
 package com.iii.linkedin.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +25,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.iii.linkedin.dao.UserDaoService;
 import com.iii.linkedin.model.User;
 import com.iii.linkedin.model.UserNotFoundException;
+
+
 
 @RestController
 @RequestMapping("/Udumy/users")
@@ -34,11 +42,15 @@ public class UserController {
 	}
 
 	@GetMapping("{id}")
-	public User retriveAllUsers(@PathVariable int id) {
+	public EntityModel<User> retriveUsersById(@PathVariable int id) {
 		User user = userDaoService.findById(id);
 		if (null == user)
 			throw new UserNotFoundException("id-" + id);
-		return (user);
+		
+		EntityModel<User> resource = new EntityModel<User>(user);
+		WebMvcLinkBuilder reportLink = linkTo(methodOn(this.getClass()).retriveAllUsers());
+		resource.add(reportLink.withRel("all-users"));
+		return (resource);
 
 	}
 
