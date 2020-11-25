@@ -35,7 +35,7 @@ public class PersonVersionController {
 	public PersonV1 headerV1() {
 		return new PersonV1("Sankar");
 	}
-	@GetMapping(value="/person/header",headers = "X-API-VERSION=1")
+	@GetMapping(value="/person/header",headers = "X-API-VERSION=2")
 	public PersonV2 headerV2() {
 		return new PersonV2(new Name("Sankar","Narayanan"));
 	}
